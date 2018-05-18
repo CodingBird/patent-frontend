@@ -48,9 +48,10 @@ const progressColumns = [
 export default class CompanyDetail extends Component {
   componentDidMount() {
     const { dispatch } = this.props;
+    let companyCode = this.props.match.params.code;
     dispatch({
       type: 'company/fetchDetail',
-      payload: { companyCode: 1 },
+      payload: { companyCode },
     });
   }
 
