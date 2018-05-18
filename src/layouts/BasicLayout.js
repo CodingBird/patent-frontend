@@ -100,14 +100,14 @@ class BasicLayout extends React.PureComponent {
     };
   }
   componentDidMount() {
-    this.enquireHandler = enquireScreen(mobile => {
-      this.setState({
-        isMobile: mobile,
-      });
-    });
-    this.props.dispatch({
-      type: 'user/fetchCurrent',
-    });
+    // this.enquireHandler = enquireScreen(mobile => {
+    //   this.setState({
+    //     isMobile: mobile,
+    //   });
+    // });
+    // this.props.dispatch({
+    //   type: 'user/fetchCurrent',
+    // });
   }
   componentWillUnmount() {
     unenquireScreen(this.enquireHandler);
@@ -192,33 +192,7 @@ class BasicLayout extends React.PureComponent {
     const bashRedirect = this.getBashRedirect();
     const layout = (
       <Layout>
-        <SiderMenu
-          logo={logo}
-          // 不带Authorized参数的情况下如果没有权限,会强制跳到403界面
-          // If you do not have the Authorized parameter
-          // you will be forced to jump to the 403 interface without permission
-          Authorized={Authorized}
-          menuData={getMenuData()}
-          collapsed={collapsed}
-          location={location}
-          isMobile={this.state.isMobile}
-          onCollapse={this.handleMenuCollapse}
-        />
         <Layout>
-          <Header style={{ padding: 0 }}>
-            <GlobalHeader
-              logo={logo}
-              currentUser={currentUser}
-              fetchingNotices={fetchingNotices}
-              notices={notices}
-              collapsed={collapsed}
-              isMobile={this.state.isMobile}
-              onNoticeClear={this.handleNoticeClear}
-              onCollapse={this.handleMenuCollapse}
-              onMenuClick={this.handleMenuClick}
-              onNoticeVisibleChange={this.handleNoticeVisibleChange}
-            />
-          </Header>
           <Content style={{ margin: '24px 24px 0', height: '100%' }}>
             <Switch>
               {redirectData.map(item => (

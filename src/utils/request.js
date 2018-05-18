@@ -2,6 +2,7 @@ import fetch from 'dva/fetch';
 import { notification } from 'antd';
 import { routerRedux } from 'dva/router';
 import store from '../index';
+import { stringify } from 'qs';
 
 const codeMessage = {
   200: '服务器成功返回请求的数据。',
@@ -35,6 +36,31 @@ function checkStatus(response) {
   throw error;
 }
 
+export function convertTestEnvUrlIfNecessary(requestUrl) {
+  if (!requestUrl.startsWith('/')) {
+    requestUrl = '/' + requestUrl;
+  }
+  // 开发环境
+  if (process.env.NODE_ENV !== 'production') {
+    requestUrl = '/api/test' + requestUrl;
+  } else {
+    requestUrl = '/api' + requestUrl;
+  }
+  return requestUrl;
+}
+
+export function get(url, params) {
+  url = `${url}?${stringify(params)}`;
+  return request(url);
+}
+
+export function post(url, params) {
+  return request(url, {
+    method: 'POST',
+    body: params,
+  });
+}
+
 /**
  * Requests a URL, returning a promise.
  *
@@ -43,6 +69,8 @@ function checkStatus(response) {
  * @return {object}           An object containing either "data" or "err"
  */
 export default function request(url, options) {
+  url = convertTestEnvUrlIfNecessary(url);
+  console.log('url:' + url);
   const defaultOptions = {
     credentials: 'include',
   };

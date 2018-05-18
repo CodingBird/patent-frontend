@@ -10,6 +10,7 @@ export default {
 
   effects: {
     *fetch(_, { call, put }) {
+      console.log('user fetch ...');
       const response = yield call(queryUsers);
       yield put({
         type: 'save',
@@ -17,6 +18,7 @@ export default {
       });
     },
     *fetchCurrent(_, { call, put }) {
+      console.log('user fetch ...');
       const response = yield call(queryCurrent);
       yield put({
         type: 'saveCurrentUser',

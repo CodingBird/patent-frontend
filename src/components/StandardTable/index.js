@@ -63,25 +63,26 @@ class StandardTable extends PureComponent {
 
   render() {
     const { selectedRowKeys, needTotalList } = this.state;
-    const { data: { list, pagination }, loading, columns, rowKey } = this.props;
+    const { data: { list, pagination }, loading, columns, rowKey, scroll } = this.props;
 
     const paginationProps = {
       showSizeChanger: true,
       showQuickJumper: true,
+      pageSize: 20,
       ...pagination,
     };
 
-    const rowSelection = {
-      selectedRowKeys,
-      onChange: this.handleRowSelectChange,
-      getCheckboxProps: record => ({
-        disabled: record.disabled,
-      }),
-    };
+    // const rowSelection = {
+    //   selectedRowKeys,
+    //   onChange: this.handleRowSelectChange,
+    //   getCheckboxProps: record => ({
+    //     disabled: record.disabled,
+    //   }),
+    // };
 
     return (
       <div className={styles.standardTable}>
-        <div className={styles.tableAlert}>
+        {/* <div className={styles.tableAlert}>
           <Alert
             message={
               <Fragment>
@@ -102,15 +103,17 @@ class StandardTable extends PureComponent {
             type="info"
             showIcon
           />
-        </div>
+        </div> */}
         <Table
           loading={loading}
           rowKey={rowKey || 'key'}
-          rowSelection={rowSelection}
+          // rowSelection={rowSelection}
           dataSource={list}
           columns={columns}
           pagination={paginationProps}
           onChange={this.handleTableChange}
+          scroll={scroll}
+          size="small"
         />
       </div>
     );
