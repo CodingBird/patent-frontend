@@ -65,7 +65,9 @@ export default class CompanyList extends PureComponent {
     }, {});
 
     const params = {
-      currentPage: pagination.current,
+      pageNo: pagination.current,
+      pageSize: pagination.pageSize,
+      // currentPage: pagination.current,
       pageSize: pagination.pageSize,
       ...formValues,
       ...filters,

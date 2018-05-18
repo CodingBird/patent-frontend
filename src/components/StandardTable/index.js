@@ -68,7 +68,10 @@ class StandardTable extends PureComponent {
     const paginationProps = {
       showSizeChanger: true,
       showQuickJumper: true,
-      pageSize: 20,
+      showTotal: total => {
+        return `共${total}条`;
+      },
+      pageSize: 10,
       ...pagination,
     };
 
