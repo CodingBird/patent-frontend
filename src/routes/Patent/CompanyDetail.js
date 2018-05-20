@@ -241,121 +241,117 @@ export default class CompanyDetail extends Component {
       },
     ];
     return (
-      <PageHeaderLayout title="详细信息">
-        <Card bordered={false}>
-          <DescriptionList size="large" title="公司基本信息" style={{ marginBottom: 32 }}>
-            <Description term="公司名称">{baseInfo.name}</Description>
-            <Description term="注册资本">{baseInfo.registered_capital}</Description>
-            <Description term="创办年份">{baseInfo.create_year}年</Description>
-            <Description term="联系电话">{baseInfo.phone_number}</Description>
-            <Description term="资产总额">{baseInfo.total_assets}</Description>
-            <Description term="固定资产总额">{baseInfo.total_capital_asserts}</Description>
-            <Description term="负债总额">{baseInfo.total_indebtedness}</Description>
-            <Description term="控股子公司数量">
-              {baseInfo.subsidiary_company_count || '-'}
-            </Description>
-            <Description term="现有职工人数">{baseInfo.total_staff_count || '-'}</Description>
-            <Description term="硕士">{baseInfo.master_staff_count || '-'}</Description>
-            <Description term="博士">{baseInfo.doctor_staff_count || '-'}</Description>
-            <Description term="科研人员">{baseInfo.researcher_count || '-'}</Description>
-            <Description term="单位性质">{baseInfo.type || '-'}</Description>
-          </DescriptionList>
+      <Card bordered={false}>
+        <DescriptionList size="large" title="公司基本信息" style={{ marginBottom: 32 }}>
+          <Description term="公司名称">{baseInfo.name}</Description>
+          <Description term="注册资本">{baseInfo.registered_capital}</Description>
+          <Description term="创办年份">{baseInfo.create_year}年</Description>
+          <Description term="联系电话">{baseInfo.phone_number}</Description>
+          <Description term="资产总额">{baseInfo.total_assets}</Description>
+          <Description term="固定资产总额">{baseInfo.total_capital_asserts}</Description>
+          <Description term="负债总额">{baseInfo.total_indebtedness}</Description>
+          <Description term="控股子公司数量">
+            {baseInfo.subsidiary_company_count || '-'}
+          </Description>
+          <Description term="现有职工人数">{baseInfo.total_staff_count || '-'}</Description>
+          <Description term="硕士">{baseInfo.master_staff_count || '-'}</Description>
+          <Description term="博士">{baseInfo.doctor_staff_count || '-'}</Description>
+          <Description term="科研人员">{baseInfo.researcher_count || '-'}</Description>
+          <Description term="单位性质">{baseInfo.type || '-'}</Description>
+        </DescriptionList>
 
-          <Divider style={{ marginBottom: 32 }} />
-          <div className={styles.title}>企业主导产品</div>
-          <Table
-            style={{ marginBottom: 24 }}
-            pagination={false}
-            loading={loading}
-            dataSource={productList}
-            columns={productColumns}
-            rowKey="id"
-            size="small"
-            bordered
-          />
-          <div className={styles.title}>经营情况</div>
-          <Table
-            style={{ marginBottom: 16 }}
-            pagination={false}
-            loading={loading}
-            dataSource={yearOperateStateList}
-            columns={operateColumns}
-            scroll={{ x: 1300 }}
-            size="small"
-            bordered
-          />
-          <Divider style={{ marginBottom: 32 }} />
-          <div className={styles.title}>专利拥有情况</div>
-          <Table
-            style={{ marginBottom: 16 }}
-            pagination={false}
-            loading={loading}
-            dataSource={yearPatentList}
-            columns={patentColumns}
-            scroll={{ x: 1300 }}
-            size="small"
-            bordered
-          />
-          <div className={styles.title}>商标拥有情况</div>
-          <Table
-            style={{ marginBottom: 16 }}
-            pagination={false}
-            loading={loading}
-            dataSource={yearPatentList}
-            columns={trademarkColumns}
-            scroll={{ x: 1300 }}
-            size="small"
-            bordered
-          />
+        <Divider style={{ marginBottom: 32 }} />
+        <div className={styles.title}>企业主导产品</div>
+        <Table
+          style={{ marginBottom: 24 }}
+          pagination={false}
+          loading={loading}
+          dataSource={productList}
+          columns={productColumns}
+          rowKey="id"
+          size="small"
+          bordered
+        />
+        <div className={styles.title}>经营情况</div>
+        <Table
+          style={{ marginBottom: 16 }}
+          pagination={false}
+          loading={loading}
+          dataSource={yearOperateStateList}
+          columns={operateColumns}
+          scroll={{ x: 1300 }}
+          size="small"
+          bordered
+        />
+        <Divider style={{ marginBottom: 32 }} />
+        <div className={styles.title}>专利拥有情况</div>
+        <Table
+          style={{ marginBottom: 16 }}
+          pagination={false}
+          loading={loading}
+          dataSource={yearPatentList}
+          columns={patentColumns}
+          scroll={{ x: 1300 }}
+          size="small"
+          bordered
+        />
+        <div className={styles.title}>商标拥有情况</div>
+        <Table
+          style={{ marginBottom: 16 }}
+          pagination={false}
+          loading={loading}
+          dataSource={yearPatentList}
+          columns={trademarkColumns}
+          scroll={{ x: 1300 }}
+          size="small"
+          bordered
+        />
 
-          <DescriptionList size="large" title="企业知识产权创造" style={{ marginBottom: 32 }}>
-            <Description term="著作权登记(件)">
-              {patentSate.copyright_registration_count}件
-            </Description>
-            <Description term="其中计算机软件著作权登记（件）">
-              {patentSate.software_copyright_registration_count}件
-            </Description>
-            <Description term="集成电路布图设计登记">
-              {patentSate.ic_diagram_registration_count}件
-            </Description>
-            <Description term="已明确界定为本单位商业（技术）秘密加以保护的项数为">
-              {patentSate.secret_registration_count}件
-            </Description>
-            <Description term="发明专利维持年限5年以上">
-              {patentSate.five_year_patent_count}件
-            </Description>
-            <Description term="实用新型维持年限3年以上">
-              {patentSate.practical_new_three_year_count}件
-            </Description>
-            <Description term="维持年限为10年以上的发明专利">
-              {patentSate.ten_year_patent_count}件
-            </Description>
-            <Description term="形成国家或行业标准数量">
-              {patentSate.standard_patent_count}条
-            </Description>
-            <Description term="企业获得知识产权的主要途径">
-              {patentSate.from_independent_create === 1 ? '自主创造 ' : ''}
-              {patentSate.from_licensed === 1 ? '被许可 ' : ''}
-              {patentSate.from_transfer === 1 ? '被转让' : ''}
-            </Description>
-          </DescriptionList>
-          <DescriptionList size="large" title="企业知识产权运用" style={{ marginBottom: 32 }}>
-            <Description term="专利自行实施数量（件）">
-              {patentSate.patent_execute_count}件
-            </Description>
-            <Description term="版权自行实施数量（件）">
-              {patentSate.copyright_execute_count}件
-            </Description>
-            <Description term="专利许可数量（件）">{patentSate.patent_license_count}件</Description>
-            <Description term="版权许可数量（件）">
-              {patentSate.copyright_license_count}件
-            </Description>
-            <Description term="专利转让数量（件）">
-              {patentSate.patent_transfer_count}件
-            </Description>
-          </DescriptionList>
-        </Card>
-      </PageHeaderLayout>
+        <DescriptionList size="large" title="企业知识产权创造" style={{ marginBottom: 32 }}>
+          <Description term="著作权登记(件)">
+            {patentSate.copyright_registration_count}件
+          </Description>
+          <Description term="其中计算机软件著作权登记（件）">
+            {patentSate.software_copyright_registration_count}件
+          </Description>
+          <Description term="集成电路布图设计登记">
+            {patentSate.ic_diagram_registration_count}件
+          </Description>
+          <Description term="已明确界定为本单位商业（技术）秘密加以保护的项数为">
+            {patentSate.secret_registration_count}件
+          </Description>
+          <Description term="发明专利维持年限5年以上">
+            {patentSate.five_year_patent_count}件
+          </Description>
+          <Description term="实用新型维持年限3年以上">
+            {patentSate.practical_new_three_year_count}件
+          </Description>
+          <Description term="维持年限为10年以上的发明专利">
+            {patentSate.ten_year_patent_count}件
+          </Description>
+          <Description term="形成国家或行业标准数量">
+            {patentSate.standard_patent_count}条
+          </Description>
+          <Description term="企业获得知识产权的主要途径">
+            {patentSate.from_independent_create === 1 ? '自主创造 ' : ''}
+            {patentSate.from_licensed === 1 ? '被许可 ' : ''}
+            {patentSate.from_transfer === 1 ? '被转让' : ''}
+          </Description>
+        </DescriptionList>
+        <DescriptionList size="large" title="企业知识产权运用" style={{ marginBottom: 32 }}>
+          <Description term="专利自行实施数量（件）">
+            {patentSate.patent_execute_count}件
+          </Description>
+          <Description term="版权自行实施数量（件）">
+            {patentSate.copyright_execute_count}件
+          </Description>
+          <Description term="专利许可数量（件）">{patentSate.patent_license_count}件</Description>
+          <Description term="版权许可数量（件）">
+            {patentSate.copyright_license_count}件
+          </Description>
+          <Description term="专利转让数量（件）">{patentSate.patent_transfer_count}件</Description>
+        </DescriptionList>
+      </Card>
     );
   }
 }

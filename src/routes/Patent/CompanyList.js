@@ -128,14 +128,25 @@ export default class CompanyList extends PureComponent {
     let { searchArr } = this.state;
     searchArr.push(searchType);
     console.log(searchArr);
-    const { dispatch } = this.props;
+    const { dispatch, form } = this.props;
     dispatch({
       type: 'company/updateSearchArr',
       payload: searchArr,
     });
   };
 
-  handleRemoveSearchType = () => {};
+  handleRemoveSearchType = () => {
+    let { searchArr } = this.state;
+    if (searchArr.length <= 0) {
+      return;
+    }
+    searchArr.shift();
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'company/updateSearchArr',
+      payload: searchArr,
+    });
+  };
 
   toggleForm = () => {
     this.setState({
@@ -162,10 +173,12 @@ export default class CompanyList extends PureComponent {
         values[key_type + '_min'] = values['min_' + i];
         values[key_type + '_max'] = values['max_' + i];
         values[key_type + '_year'] = values['year_' + i];
+        values[key_type + '_bool'] = values['bool_' + i];
 
         delete values['min_' + i];
         delete values['max_' + i];
         delete values['year_' + i];
+        delete values['bool_' + i];
         delete values['search_type_' + i];
       }
 
@@ -270,7 +283,15 @@ export default class CompanyList extends PureComponent {
           </Col>
         </Row>
         {searchArr.map((item, idx) => (
-          <Row type="flex">
+          <Row type="flex" key={idx}>
+            <Col span={2}>
+              {getFieldDecorator('bool_' + idx, { initialValue: 'and' })(
+                <Select style={{ width: '100%' }}>
+                  <Option value="and">并且</Option>
+                  <Option value="or">或者</Option>
+                </Select>
+              )}
+            </Col>
             <Col span={3}>
               {getFieldDecorator('search_type_' + idx)(
                 <Select placeholder="请选择搜索字段" style={{ width: '100%' }} allowClear>
