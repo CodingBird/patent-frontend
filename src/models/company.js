@@ -56,5 +56,11 @@ export default {
         data: action.payload,
       };
     },
+    updateSearchArr(state, action) {
+      return {
+        ...state,
+        searchArr: action.payload,
+      };
+    },
   },
 };

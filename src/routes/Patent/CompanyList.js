@@ -45,6 +45,7 @@ export default class CompanyList extends PureComponent {
     expandForm: false,
     selectedRows: [],
     formValues: {},
+    searchArr: [],
   };
 
   componentDidMount() {
@@ -94,6 +95,48 @@ export default class CompanyList extends PureComponent {
     });
   };
 
+  handleAddSearchType = () => {
+    let searchType = {
+      search_type: [
+        { key: 'invention_patent_apply_count', val: '发明专利申请量' },
+        { key: 'invention_patent_authorize_count', val: '发明专利授权量' },
+        { key: 'invention_patent_owning_count', val: '发明专利拥有量' },
+
+        { key: 'practical_new_apply_count', val: '实用新型申请量' },
+        { key: 'practical_new_authorize_count', val: '实用新型授权量' },
+        { key: 'practical_new_owning_count', val: '实用新型拥有量' },
+
+        { key: 'appearance_design_apply_count', val: '外观设计申请量' },
+        { key: 'appearance_design_authorize_count', val: '外观设计授权量' },
+        { key: 'appearance_design_owning_count', val: '外观设计拥有量' },
+
+        { key: 'registed_trademark_count', val: '已注册商标量' },
+        { key: 'copyright_registration_count', val: '著作权登记件数' },
+      ],
+      min_val: '',
+      max_val: '',
+      year: [
+        { key: '2014', val: '2014年' },
+        { key: '2015', val: '2015年' },
+        { key: '2016', val: '2016年' },
+        { key: '2017', val: '2017年' },
+        { key: '2018', val: '2018年' },
+        { key: '2019', val: '2019年' },
+        { key: '2020', val: '2020年' },
+      ],
+    };
+    let { searchArr } = this.state;
+    searchArr.push(searchType);
+    console.log(searchArr);
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'company/updateSearchArr',
+      payload: searchArr,
+    });
+  };
+
+  handleRemoveSearchType = () => {};
+
   toggleForm = () => {
     this.setState({
       expandForm: !this.state.expandForm,
@@ -112,6 +155,19 @@ export default class CompanyList extends PureComponent {
         ...fieldsValue,
         updatedAt: fieldsValue.updatedAt && fieldsValue.updatedAt.valueOf(),
       };
+      let { searchArr } = this.state;
+      console.log(searchArr);
+      for (let i = 0; i < searchArr.length; i++) {
+        let key_type = values['search_type_' + i];
+        values[key_type + '_min'] = values['min_' + i];
+        values[key_type + '_max'] = values['max_' + i];
+        values[key_type + '_year'] = values['year_' + i];
+
+        delete values['min_' + i];
+        delete values['max_' + i];
+        delete values['year_' + i];
+        delete values['search_type_' + i];
+      }
 
       this.setState({
         formValues: values,
@@ -161,6 +217,8 @@ export default class CompanyList extends PureComponent {
 
   renderAdvancedForm() {
     const { getFieldDecorator } = this.props.form;
+    let { searchArr } = this.state;
+
     return (
       <Form onSubmit={this.handleSearch} layout="inline">
         <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
@@ -190,302 +248,6 @@ export default class CompanyList extends PureComponent {
         </Row>
         <Row type="flex">
           <Col span={7}>
-            <FormItem label="发明专利申请量">
-              {getFieldDecorator('invention_patent_apply_count_min')(
-                <Input placeholder="大于等于" />
-              )}
-            </FormItem>
-          </Col>
-          -
-          <Col span={4}>
-            <FormItem>
-              {getFieldDecorator('invention_patent_apply_count_max')(
-                <Input placeholder="小于等于" />
-              )}
-            </FormItem>
-          </Col>
-          <Col span={8} style={{ marginLeft: 20 }}>
-            <FormItem label="年份">
-              {getFieldDecorator('invention_patent_apply_count_year')(
-                <Select placeholder="请选择" style={{ width: '100%' }} allowClear>
-                  <Option value="2014">2014年</Option>
-                  <Option value="2015">2015年</Option>
-                  <Option value="2016">2016年</Option>
-                </Select>
-              )}
-            </FormItem>
-          </Col>
-        </Row>
-        <Row type="flex">
-          <Col span={7}>
-            <FormItem label="发明专利授权量">
-              {getFieldDecorator('invention_patent_authorize_count_min')(
-                <Input placeholder="大于等于" />
-              )}
-            </FormItem>
-          </Col>
-          -
-          <Col span={4}>
-            <FormItem>
-              {getFieldDecorator('invention_patent_authorize_count_max')(
-                <Input placeholder="小于等于" />
-              )}
-            </FormItem>
-          </Col>
-          <Col span={8} style={{ marginLeft: 20 }}>
-            <FormItem label="年份">
-              {getFieldDecorator('invention_patent_authorize_count_year')(
-                <Select placeholder="请选择" style={{ width: '100%' }} allowClear>
-                  <Option value="2014">2014年</Option>
-                  <Option value="2015">2015年</Option>
-                  <Option value="2016">2016年</Option>
-                </Select>
-              )}
-            </FormItem>
-          </Col>
-        </Row>
-        <Row type="flex">
-          <Col span={7}>
-            <FormItem label="发明专利拥有量">
-              {getFieldDecorator('invention_patent_owning_count_min')(
-                <Input placeholder="大于等于" />
-              )}
-            </FormItem>
-          </Col>
-          -
-          <Col span={4}>
-            <FormItem>
-              {getFieldDecorator('invention_patent_owning_count_max')(
-                <Input placeholder="小于等于" />
-              )}
-            </FormItem>
-          </Col>
-          <Col span={8} style={{ marginLeft: 20 }}>
-            <FormItem label="年份">
-              {getFieldDecorator('invention_patent_owning_count_year')(
-                <Select placeholder="请选择" style={{ width: '100%' }} allowClear>
-                  <Option value="2014">2014年</Option>
-                  <Option value="2015">2015年</Option>
-                  <Option value="2016">2016年</Option>
-                </Select>
-              )}
-            </FormItem>
-          </Col>
-        </Row>
-        <Row type="flex">
-          <Col span={7}>
-            <FormItem label="实用新型申请量">
-              {getFieldDecorator('practical_new_apply_count_min')(<Input placeholder="大于等于" />)}
-            </FormItem>
-          </Col>
-          -
-          <Col span={4}>
-            <FormItem>
-              {getFieldDecorator('practical_new_apply_count_max')(<Input placeholder="小于等于" />)}
-            </FormItem>
-          </Col>
-          <Col span={8} style={{ marginLeft: 20 }}>
-            <FormItem label="年份">
-              {getFieldDecorator('practical_new_apply_count_year')(
-                <Select placeholder="请选择" style={{ width: '100%' }} allowClear>
-                  <Option value="2014">2014年</Option>
-                  <Option value="2015">2015年</Option>
-                  <Option value="2016">2016年</Option>
-                </Select>
-              )}
-            </FormItem>
-          </Col>
-        </Row>
-        <Row type="flex">
-          <Col span={7}>
-            <FormItem label="实用新型授权量">
-              {getFieldDecorator('practical_new_authorize_count_min')(
-                <Input placeholder="大于等于" />
-              )}
-            </FormItem>
-          </Col>
-          -
-          <Col span={4}>
-            <FormItem>
-              {getFieldDecorator('practical_new_authorize_count_max')(
-                <Input placeholder="小于等于" />
-              )}
-            </FormItem>
-          </Col>
-          <Col span={8} style={{ marginLeft: 20 }}>
-            <FormItem label="年份">
-              {getFieldDecorator('practical_new_authorize_count_year')(
-                <Select placeholder="请选择" style={{ width: '100%' }} allowClear>
-                  <Option value="2014">2014年</Option>
-                  <Option value="2015">2015年</Option>
-                  <Option value="2016">2016年</Option>
-                </Select>
-              )}
-            </FormItem>
-          </Col>
-        </Row>
-        <Row type="flex">
-          <Col span={7}>
-            <FormItem label="实用新型拥有量">
-              {getFieldDecorator('practical_new_owning_count_min')(
-                <Input placeholder="大于等于" />
-              )}
-            </FormItem>
-          </Col>
-          -
-          <Col span={4}>
-            <FormItem>
-              {getFieldDecorator('practical_new_owning_count_max')(
-                <Input placeholder="小于等于" />
-              )}
-            </FormItem>
-          </Col>
-          <Col span={8} style={{ marginLeft: 20 }}>
-            <FormItem label="年份">
-              {getFieldDecorator('practical_new_owning_count_year')(
-                <Select placeholder="请选择" style={{ width: '100%' }} allowClear>
-                  <Option value="2014">2014年</Option>
-                  <Option value="2015">2015年</Option>
-                  <Option value="2016">2016年</Option>
-                </Select>
-              )}
-            </FormItem>
-          </Col>
-        </Row>
-        <Row type="flex">
-          <Col span={7}>
-            <FormItem label="外观设计申请量">
-              {getFieldDecorator('appearance_design_apply_count_min')(
-                <Input placeholder="大于等于" />
-              )}
-            </FormItem>
-          </Col>
-          -
-          <Col span={4}>
-            <FormItem>
-              {getFieldDecorator('appearance_design_apply_count_max')(
-                <Input placeholder="小于等于" />
-              )}
-            </FormItem>
-          </Col>
-          <Col span={8} style={{ marginLeft: 20 }}>
-            <FormItem label="年份">
-              {getFieldDecorator('appearance_design_apply_count_year')(
-                <Select placeholder="请选择" style={{ width: '100%' }} allowClear>
-                  <Option value="2014">2014年</Option>
-                  <Option value="2015">2015年</Option>
-                  <Option value="2016">2016年</Option>
-                </Select>
-              )}
-            </FormItem>
-          </Col>
-        </Row>
-        <Row type="flex">
-          <Col span={7}>
-            <FormItem label="外观设计授权量">
-              {getFieldDecorator('appearance_design_authorize_count_min')(
-                <Input placeholder="大于等于" />
-              )}
-            </FormItem>
-          </Col>
-          -
-          <Col span={4}>
-            <FormItem>
-              {getFieldDecorator('appearance_design_authorize_count_max')(
-                <Input placeholder="小于等于" />
-              )}
-            </FormItem>
-          </Col>
-          <Col span={8} style={{ marginLeft: 20 }}>
-            <FormItem label="年份">
-              {getFieldDecorator('appearance_design_authorize_count_year')(
-                <Select placeholder="请选择" style={{ width: '100%' }} allowClear>
-                  <Option value="2014">2014年</Option>
-                  <Option value="2015">2015年</Option>
-                  <Option value="2016">2016年</Option>
-                </Select>
-              )}
-            </FormItem>
-          </Col>
-        </Row>
-        <Row type="flex">
-          <Col span={7}>
-            <FormItem label="外观设计拥有量">
-              {getFieldDecorator('appearance_design_owning_count_min')(
-                <Input placeholder="大于等于" />
-              )}
-            </FormItem>
-          </Col>
-          -
-          <Col span={4}>
-            <FormItem>
-              {getFieldDecorator('appearance_design_owning_count_max')(
-                <Input placeholder="小于等于" />
-              )}
-            </FormItem>
-          </Col>
-          <Col span={8} style={{ marginLeft: 20 }}>
-            <FormItem label="年份">
-              {getFieldDecorator('appearance_design_owning_count_year')(
-                <Select placeholder="请选择" style={{ width: '100%' }} allowClear>
-                  <Option value="2014">2014年</Option>
-                  <Option value="2015">2015年</Option>
-                  <Option value="2016">2016年</Option>
-                </Select>
-              )}
-            </FormItem>
-          </Col>
-        </Row>
-        <Row type="flex">
-          <Col span={7}>
-            <FormItem label="PCT专利申请数量">
-              {getFieldDecorator('pct_patent_apply_count_min')(<Input placeholder="大于等于" />)}
-            </FormItem>
-          </Col>
-          -
-          <Col span={4}>
-            <FormItem>
-              {getFieldDecorator('pct_patent_apply_count_max')(<Input placeholder="小于等于" />)}
-            </FormItem>
-          </Col>
-          <Col span={8} style={{ marginLeft: 20 }}>
-            <FormItem label="年份">
-              {getFieldDecorator('pct_patent_apply_count_year')(
-                <Select placeholder="请选择" style={{ width: '100%' }} allowClear>
-                  <Option value="2014">2014年</Option>
-                  <Option value="2015">2015年</Option>
-                  <Option value="2016">2016年</Option>
-                </Select>
-              )}
-            </FormItem>
-          </Col>
-        </Row>
-        <Row type="flex">
-          <Col span={7}>
-            <FormItem label="已注册商标量">
-              {getFieldDecorator('registed_trademark_count_min')(<Input placeholder="大于等于" />)}
-            </FormItem>
-          </Col>
-          -
-          <Col span={4}>
-            <FormItem>
-              {getFieldDecorator('registed_trademark_count_max')(<Input placeholder="小于等于" />)}
-            </FormItem>
-          </Col>
-          <Col span={8} style={{ marginLeft: 20 }}>
-            <FormItem label="年份">
-              {getFieldDecorator('registed_trademark_count_year')(
-                <Select placeholder="请选择" style={{ width: '100%' }} allowClear>
-                  <Option value="2014">2014年</Option>
-                  <Option value="2015">2015年</Option>
-                  <Option value="2016">2016年</Option>
-                </Select>
-              )}
-            </FormItem>
-          </Col>
-        </Row>
-        <Row type="flex">
-          <Col span={7}>
             <FormItem label="著作权登记(件)">
               {getFieldDecorator('copyright_registration_count_min')(
                 <Input placeholder="大于等于" />
@@ -500,18 +262,44 @@ export default class CompanyList extends PureComponent {
               )}
             </FormItem>
           </Col>
-          {/* <Col span={8} style={{ marginLeft: 20 }}>
-            <FormItem label="年份">
-              {getFieldDecorator('invention_patent_owning_count_year')(
-                <Select placeholder="请选择" style={{ width: '100%' }} allowClear>
-                  <Option value="2014">2014年</Option>
-                  <Option value="2015">2015年</Option>
-                  <Option value="2016">2016年</Option>
+          <Col span={4} style={{ marginLeft: 20 }}>
+            <Button onClick={this.handleAddSearchType}>+</Button>
+            <Button onClick={this.handleRemoveSearchType} style={{ marginLeft: 20 }}>
+              -
+            </Button>
+          </Col>
+        </Row>
+        {searchArr.map((item, idx) => (
+          <Row type="flex">
+            <Col span={3}>
+              {getFieldDecorator('search_type_' + idx)(
+                <Select placeholder="请选择搜索字段" style={{ width: '100%' }} allowClear>
+                  {item['search_type'].map(y => <Option value={y.key}>{y.val}</Option>)}
                 </Select>
               )}
-            </FormItem>
-          </Col> */}
-        </Row>
+            </Col>
+            <Col span={4}>
+              <FormItem>
+                {getFieldDecorator('min_' + idx)(<Input placeholder="大于等于" />)}
+              </FormItem>
+            </Col>
+            -
+            <Col span={4}>
+              <FormItem>
+                {getFieldDecorator('max_' + idx)(<Input placeholder="小于等于" />)}
+              </FormItem>
+            </Col>
+            <Col span={4} style={{ marginLeft: 20 }}>
+              <FormItem label="年份">
+                {getFieldDecorator('year_' + idx)(
+                  <Select placeholder="请选择" style={{ width: '100%' }} allowClear>
+                    {item['year'].map(y => <Option value={y.key}>{y.val}</Option>)}
+                  </Select>
+                )}
+              </FormItem>
+            </Col>
+          </Row>
+        ))}
       </Form>
     );
   }
@@ -521,6 +309,7 @@ export default class CompanyList extends PureComponent {
   }
 
   render() {
+    console.log('render...');
     const { company: { data }, loading } = this.props;
     const { selectedRows, modalVisible } = this.state;
     // let data = [];
@@ -532,12 +321,15 @@ export default class CompanyList extends PureComponent {
       {
         title: '公司名称',
         dataIndex: 'name',
-        render: (val, record) => <Link to={`/patent/company-detail/${record.code}`}>{val}</Link>,
+        render: (val, record) => (
+          <Link to={`/patent/company-detail/${record.code}`} target="_blank">
+            {val}
+          </Link>
+        ),
       },
       {
         title: '注册资本',
         dataIndex: 'registered_capital',
-        sorter: true,
         align: 'right',
         render: val => `${val} 万`,
         // mark to display a total number
@@ -546,30 +338,37 @@ export default class CompanyList extends PureComponent {
       {
         title: '创办年份',
         dataIndex: 'create_year',
+        align: 'center',
       },
       {
         title: '联系电话',
         dataIndex: 'phone_number',
+        align: 'center',
       },
       {
         title: '资产总额',
         dataIndex: 'total_assets',
+        align: 'center',
       },
       {
         title: '固定资产总额',
         dataIndex: 'total_capital_asserts',
+        align: 'center',
       },
       {
         title: '负债总额',
         dataIndex: 'total_indebtedness',
+        align: 'center',
       },
       {
         title: '控股子公司数量',
         dataIndex: 'subsidiary_company_count',
+        align: 'center',
       },
       {
         title: '职工人数',
         dataIndex: 'total_staff_count',
+        align: 'center',
       },
       // {
       //   title: '硕士',
@@ -586,6 +385,22 @@ export default class CompanyList extends PureComponent {
       {
         title: '单位性质',
         dataIndex: 'type',
+        align: 'center',
+      },
+      {
+        title: '专利拥有量',
+        dataIndex: 'invention_patent_owning_count',
+        align: 'center',
+      },
+      {
+        title: '注册商标拥有量',
+        dataIndex: 'registed_trademark_count',
+        align: 'center',
+      },
+      {
+        title: '著作权拥有量',
+        dataIndex: 'copyright_registration_count',
+        align: 'center',
       },
       // {
       //   title: '状态',
@@ -632,22 +447,20 @@ export default class CompanyList extends PureComponent {
     ];
 
     return (
-      <PageHeaderLayout title="问卷调查数据">
-        <Card bordered={false}>
-          <div className={styles.tableList}>
-            <div className={styles.tableListForm}>{this.renderForm()}</div>
-            <StandardTable
-              selectedRows={selectedRows}
-              loading={loading}
-              data={data}
-              columns={columns}
-              onSelectRow={this.handleSelectRows}
-              onChange={this.handleStandardTableChange}
-              scroll={{ x: 1300 }}
-            />
-          </div>
-        </Card>
-      </PageHeaderLayout>
+      <Card bordered={false}>
+        <div className={styles.tableList}>
+          <div className={styles.tableListForm}>{this.renderForm()}</div>
+          <StandardTable
+            selectedRows={selectedRows}
+            loading={loading}
+            data={data}
+            columns={columns}
+            onSelectRow={this.handleSelectRows}
+            onChange={this.handleStandardTableChange}
+            scroll={{ x: 1500 }}
+          />
+        </div>
+      </Card>
     );
   }
 }

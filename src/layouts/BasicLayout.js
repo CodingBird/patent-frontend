@@ -126,7 +126,7 @@ class BasicLayout extends React.PureComponent {
     if (currRouterData && currRouterData.name) {
       title = `${currRouterData.name} - Ant Design Pro`;
     }
-    return title;
+    return '吴中区知识产权密集型企业数据库';
   }
   getBashRedirect = () => {
     // According to the url parameter to redirect
@@ -193,6 +193,11 @@ class BasicLayout extends React.PureComponent {
     const layout = (
       <Layout>
         <Layout>
+          <Header style={{ padding: 0, backgroundColor: 'white' }}>
+            <view style={{}}>
+              <h1 style={{ paddingLeft: '30px' }}>吴中区知识产权密集型企业数据库</h1>
+            </view>
+          </Header>
           <Content style={{ margin: '24px 24px 0', height: '100%' }}>
             <Switch>
               {redirectData.map(item => (

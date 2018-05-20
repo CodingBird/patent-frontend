@@ -7,40 +7,6 @@ import styles from './CompanyDetail.less';
 
 const { Description } = DescriptionList;
 
-const progressColumns = [
-  {
-    title: '时间',
-    dataIndex: 'time',
-    key: 'time',
-  },
-  {
-    title: '当前进度',
-    dataIndex: 'rate',
-    key: 'rate',
-  },
-  {
-    title: '状态',
-    dataIndex: 'status',
-    key: 'status',
-    render: text =>
-      text === 'success' ? (
-        <Badge status="success" text="成功" />
-      ) : (
-        <Badge status="processing" text="进行中" />
-      ),
-  },
-  {
-    title: '操作员ID',
-    dataIndex: 'operator',
-    key: 'operator',
-  },
-  {
-    title: '耗时',
-    dataIndex: 'cost',
-    key: 'cost',
-  },
-];
-
 @connect(({ company, loading }) => ({
   company,
   loading: loading.models.company,
@@ -342,7 +308,7 @@ export default class CompanyDetail extends Component {
             bordered
           />
 
-          <DescriptionList size="large" title="知识产权创造情况" style={{ marginBottom: 32 }}>
+          <DescriptionList size="large" title="企业知识产权创造" style={{ marginBottom: 32 }}>
             <Description term="著作权登记(件)">
               {patentSate.copyright_registration_count}件
             </Description>
@@ -373,7 +339,7 @@ export default class CompanyDetail extends Component {
               {patentSate.from_transfer === 1 ? '被转让' : ''}
             </Description>
           </DescriptionList>
-          <DescriptionList size="large" title="企业知识产权运用效果" style={{ marginBottom: 32 }}>
+          <DescriptionList size="large" title="企业知识产权运用" style={{ marginBottom: 32 }}>
             <Description term="专利自行实施数量（件）">
               {patentSate.patent_execute_count}件
             </Description>

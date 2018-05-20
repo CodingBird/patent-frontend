@@ -44,7 +44,7 @@ export function convertTestEnvUrlIfNecessary(requestUrl) {
   if (process.env.NODE_ENV !== 'production') {
     requestUrl = '/api/test' + requestUrl;
   } else {
-    requestUrl = '/api' + requestUrl;
+    requestUrl = requestUrl;
   }
   return requestUrl;
 }
