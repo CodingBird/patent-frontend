@@ -6,8 +6,7 @@ import { connect } from 'dva';
 import { Route, Redirect, Switch, routerRedux } from 'dva/router';
 import { ContainerQuery } from 'react-container-query';
 import classNames from 'classnames';
-import pathToRegexp from 'path-to-regexp';
-import { enquireScreen, unenquireScreen } from 'enquire-js';
+import { enquireScreen } from 'enquire-js';
 import GlobalHeader from '../components/GlobalHeader';
 import GlobalFooter from '../components/GlobalFooter';
 import SiderMenu from '../components/SiderMenu';
@@ -18,7 +17,7 @@ import { getMenuData } from '../common/menu';
 import logo from '../assets/logo.svg';
 
 const { Content, Header, Footer } = Layout;
-const { AuthorizedRoute, check } = Authorized;
+const { AuthorizedRoute } = Authorized;
 
 /**
  * 根据菜单取得重定向地址.
@@ -28,8 +27,8 @@ const getRedirect = item => {
   if (item && item.children) {
     if (item.children[0] && item.children[0].path) {
       redirectData.push({
-        from: `${item.path}`,
-        to: `${item.children[0].path}`,
+        from: `/${item.path}`,
+        to: `/${item.children[0].path}`,
       });
       item.children.forEach(children => {
         getRedirect(children);
@@ -38,25 +37,6 @@ const getRedirect = item => {
   }
 };
 getMenuData().forEach(getRedirect);
-
-/**
- * 获取面包屑映射
- * @param {Object} menuData 菜单配置
- * @param {Object} routerData 路由配置
- */
-const getBreadcrumbNameMap = (menuData, routerData) => {
-  const result = {};
-  const childResult = {};
-  for (const i of menuData) {
-    if (!routerData[i.path]) {
-      result[i.path] = i;
-    }
-    if (i.children) {
-      Object.assign(childResult, getBreadcrumbNameMap(i.children, routerData));
-    }
-  }
-  return Object.assign({}, routerData, result, childResult);
-};
 
 const query = {
   'screen-xs': {
@@ -96,37 +76,24 @@ class BasicLayout extends React.PureComponent {
     const { location, routerData } = this.props;
     return {
       location,
-      breadcrumbNameMap: getBreadcrumbNameMap(getMenuData(), routerData),
+      breadcrumbNameMap: routerData,
     };
   }
   componentDidMount() {
-    // this.enquireHandler = enquireScreen(mobile => {
-    //   this.setState({
-    //     isMobile: mobile,
-    //   });
-    // });
-    // this.props.dispatch({
-    //   type: 'user/fetchCurrent',
-    // });
-  }
-  componentWillUnmount() {
-    unenquireScreen(this.enquireHandler);
+    enquireScreen(mobile => {
+      this.setState({
+        isMobile: mobile,
+      });
+    });
   }
   getPageTitle() {
     const { routerData, location } = this.props;
     const { pathname } = location;
-    let title = 'Ant Design Pro';
-    let currRouterData = null;
-    // match params path
-    Object.keys(routerData).forEach(key => {
-      if (pathToRegexp(key).test(pathname)) {
-        currRouterData = routerData[key];
-      }
-    });
-    if (currRouterData && currRouterData.name) {
-      title = `${currRouterData.name} - Ant Design Pro`;
+    let title = '吴中区知识产权密集型企业数据库';
+    if (routerData[pathname] && routerData[pathname].name) {
+      title = `${routerData[pathname].name} `;
     }
-    return '吴中区知识产权密集型企业数据库';
+    return title;
   }
   getBashRedirect = () => {
     // According to the url parameter to redirect
@@ -139,12 +106,11 @@ class BasicLayout extends React.PureComponent {
       urlParams.searchParams.delete('redirect');
       window.history.replaceState(null, 'redirect', urlParams.href);
     } else {
-      const { routerData } = this.props;
-      // get the first authorized route path in routerData
-      const authorizedPath = Object.keys(routerData).find(
-        item => check(routerData[item].authority, item) && item !== '/'
-      );
-      return authorizedPath;
+      const token = localStorage.getItem('token');
+      if (!token) {
+        return '/user/login';
+      }
+      return '/dashboard/real-time-data';
     }
     return redirect;
   };
@@ -152,13 +118,6 @@ class BasicLayout extends React.PureComponent {
     this.props.dispatch({
       type: 'global/changeLayoutCollapsed',
       payload: collapsed,
-    });
-  };
-  handleNoticeClear = type => {
-    message.success(`清空了${type}`);
-    this.props.dispatch({
-      type: 'global/clearNotices',
-      payload: type,
     });
   };
   handleMenuClick = ({ key }) => {
@@ -172,31 +131,32 @@ class BasicLayout extends React.PureComponent {
       });
     }
   };
-  handleNoticeVisibleChange = visible => {
-    if (visible) {
-      this.props.dispatch({
-        type: 'global/fetchNotices',
-      });
-    }
-  };
   render() {
-    const {
-      currentUser,
-      collapsed,
-      fetchingNotices,
-      notices,
-      routerData,
-      match,
-      location,
-    } = this.props;
+    const { collapsed, routerData, match, location } = this.props;
     const bashRedirect = this.getBashRedirect();
     const layout = (
       <Layout>
+        <SiderMenu
+          logo={logo}
+          // 不带Authorized参数的情况下如果没有权限,会强制跳到403界面
+          // If you do not have the Authorized parameter
+          // you will be forced to jump to the 403 interface without permission
+          Authorized={Authorized}
+          menuData={getMenuData()}
+          collapsed={collapsed}
+          location={location}
+          isMobile={this.state.isMobile}
+          onCollapse={this.handleMenuCollapse}
+        />
         <Layout>
-          <Header style={{ padding: 0, backgroundColor: 'white' }}>
-            <view style={{}}>
-              <h1 style={{ paddingLeft: '30px' }}>吴中区知识产权密集型企业数据库</h1>
-            </view>
+          <Header style={{ padding: 0 }}>
+            <GlobalHeader
+              logo={logo}
+              collapsed={collapsed}
+              isMobile={this.state.isMobile}
+              onCollapse={this.handleMenuCollapse}
+              onMenuClick={this.handleMenuClick}
+            />
           </Header>
           <Content style={{ margin: '24px 24px 0', height: '100%' }}>
             <Switch>
@@ -217,6 +177,18 @@ class BasicLayout extends React.PureComponent {
               <Route render={NotFound} />
             </Switch>
           </Content>
+          <Footer style={{ padding: 0 }}>
+            <GlobalFooter
+              copyright={
+                <Fragment>
+                  Copyright <Icon type="copyright" /> 2018 南京八号空间&nbsp;
+                  <a target="_blank" href="http://www.miitbeian.gov.cn">
+                    苏ICP备18015806号
+                  </a>
+                </Fragment>
+              }
+            />
+          </Footer>
         </Layout>
       </Layout>
     );
@@ -232,8 +204,5 @@ class BasicLayout extends React.PureComponent {
 }
 
 export default connect(({ user, global, loading }) => ({
-  currentUser: user.currentUser,
   collapsed: global.collapsed,
-  fetchingNotices: loading.effects['global/fetchNotices'],
-  notices: global.notices,
 }))(BasicLayout);

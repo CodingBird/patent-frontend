@@ -78,6 +78,17 @@ export const getRouterData = app => {
     '/patent/company-detail/:code': {
       component: dynamicWrapper(app, ['company'], () => import('../routes/Patent/CompanyDetail')),
     },
+    '/industry/list': {
+      component: dynamicWrapper(app, ['industry'], () => import('../routes/Patent/IndustryList')),
+    },
+    '/industry/industry-detail/:id': {
+      component: dynamicWrapper(app, ['industry'], () => import('../routes/Patent/IndustryDetail')),
+    },
+    '/industry/industry-compare': {
+      component: dynamicWrapper(app, ['industry'], () =>
+        import('../routes/Patent/IndustryCompare')
+      ),
+    },
     '/dashboard/analysis': {
       component: dynamicWrapper(app, ['chart'], () => import('../routes/Dashboard/Analysis')),
     },
@@ -88,12 +99,14 @@ export const getRouterData = app => {
       component: dynamicWrapper(app, ['project', 'activities', 'chart'], () =>
         import('../routes/Dashboard/Workplace')
       ),
-      // hideInBreadcrumb: true,
-      // name: '工作台',
-      // authority: 'admin',
     },
     '/form/basic-form': {
-      component: dynamicWrapper(app, ['form'], () => import('../routes/Forms/BasicForm')),
+      component: dynamicWrapper(app, ['form'], () =>
+        import(// hideInBreadcrumb: true,
+        // name: '工作台',
+        // authority: 'admin',
+        '../routes/Forms/BasicForm')
+      ),
     },
     '/form/step-form': {
       component: dynamicWrapper(app, ['form'], () => import('../routes/Forms/StepForm')),
@@ -174,10 +187,10 @@ export const getRouterData = app => {
     '/user/register-result': {
       component: dynamicWrapper(app, [], () => import('../routes/User/RegisterResult')),
     },
-    // '/user/:id': {
-    //   component: dynamicWrapper(app, [], () => import('../routes/User/SomeComponent')),
-    // },
   };
+  // '/user/:id': {
+  //   component: dynamicWrapper(app, [], () => import('../routes/User/SomeComponent')),
+  // },
   // Get name from ./menu.js or just set it in the router data.
   const menuData = getFlatMenuData(getMenuData());
 

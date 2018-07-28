@@ -2,15 +2,19 @@ import { isUrl } from '../utils/utils';
 
 const menuData = [
   {
-    name: '问卷调查数据',
+    name: '专利数据',
     icon: 'dashboard',
-    path: 'patent',
-    children: [
-      {
-        name: '',
-        path: 'list',
-      },
-    ],
+    path: 'patent/list',
+  },
+  {
+    name: '产业数据',
+    icon: 'dashboard',
+    path: 'industry/list',
+  },
+  {
+    name: '产业数据对比',
+    icon: 'dashboard',
+    path: 'industry/industry-compare',
   },
 ];
 

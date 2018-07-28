@@ -352,7 +352,7 @@ export default class CompanyList extends PureComponent {
         title: '注册资本',
         dataIndex: 'registered_capital',
         align: 'right',
-        render: val => `${val} 万`,
+        render: val => (val ? `${val} 万` : '-'),
         // mark to display a total number
         needTotal: true,
       },
