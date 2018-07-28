@@ -24,6 +24,9 @@ import StandardTable from 'components/StandardTable';
 import PageHeaderLayout from '../../layouts/PageHeaderLayout';
 
 import styles from './CompanyList.less';
+import PatentTrend from './PatentTrend';
+
+import * as companyService from '../../services/company';
 
 const FormItem = Form.Item;
 const { Option } = Select;
@@ -46,6 +49,8 @@ export default class CompanyList extends PureComponent {
     selectedRows: [],
     formValues: {},
     searchArr: [],
+    showTrendModal: false,
+    trendType: 'patent',
   };
 
   componentDidMount() {
@@ -329,16 +334,33 @@ export default class CompanyList extends PureComponent {
     return this.state.expandForm ? this.renderAdvancedForm() : this.renderSimpleForm();
   }
 
+  async showPatentTrend(record) {
+    // console.log(record);
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'company/fetchYearPatent',
+      payload: { companyCode: record.code },
+    });
+    this.setState({ showTrendModal: true, trendType: 'patent' });
+  }
+
+  async showTrademarkTrend(record) {
+    // console.log(record);
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'company/fetchYearPatent',
+      payload: { companyCode: record.code },
+    });
+    this.setState({ showTrendModal: true, trendType: 'trademark' });
+  }
+
   render() {
     console.log('render...');
-    const { company: { data }, loading } = this.props;
-    const { selectedRows, modalVisible } = this.state;
+    const { company: { data, yearPatentList }, loading } = this.props;
+    const { selectedRows, modalVisible, trendType } = this.state;
     // let data = [];
     const columns = [
-      {
-        title: '公司编号',
-        dataIndex: 'code',
-      },
+      { title: '公司编号', dataIndex: 'code' },
       {
         title: '公司名称',
         dataIndex: 'name',
@@ -353,46 +375,15 @@ export default class CompanyList extends PureComponent {
         dataIndex: 'registered_capital',
         align: 'right',
         render: val => (val ? `${val} 万` : '-'),
-        // mark to display a total number
         needTotal: true,
       },
-      {
-        title: '创办年份',
-        dataIndex: 'create_year',
-        align: 'center',
-      },
-      {
-        title: '联系电话',
-        dataIndex: 'phone_number',
-        align: 'center',
-      },
-      {
-        title: '资产总额',
-        dataIndex: 'total_assets',
-        align: 'center',
-      },
-      {
-        title: '固定资产总额',
-        dataIndex: 'total_capital_asserts',
-        align: 'center',
-      },
-      {
-        title: '负债总额',
-        dataIndex: 'total_indebtedness',
-        align: 'center',
-      },
-      {
-        title: '控股子公司数量',
-        dataIndex: 'subsidiary_company_count',
-        align: 'center',
-      },
-      {
-        title: '职工人数',
-        dataIndex: 'total_staff_count',
-        align: 'center',
-      },
-      // {
-      //   title: '硕士',
+      { title: '创办年份', dataIndex: 'create_year', align: 'center' },
+      { title: '联系电话', dataIndex: 'phone_number', align: 'center' },
+      { title: '资产总额', dataIndex: 'total_assets', align: 'center' },
+      { title: '固定资产总额', dataIndex: 'total_capital_asserts', align: 'center' },
+      { title: '负债总额', dataIndex: 'total_indebtedness', align: 'center' },
+      { title: '控股子公司数量', dataIndex: 'subsidiary_company_count', align: 'center' },
+      { title: '职工人数', dataIndex: 'total_staff_count', align: 'center' }, //   title: '硕士', // mark to display a total number // {
       //   dataIndex: 'master_staff_count',
       // },
       // {
@@ -403,28 +394,10 @@ export default class CompanyList extends PureComponent {
       //   title: '科研人员',
       //   dataIndex: 'researcher_count',
       // },
-      {
-        title: '单位性质',
-        dataIndex: 'type',
-        align: 'center',
-      },
-      {
-        title: '专利拥有量',
-        dataIndex: 'invention_patent_owning_count',
-        align: 'center',
-      },
-      {
-        title: '注册商标拥有量',
-        dataIndex: 'registed_trademark_count',
-        align: 'center',
-      },
-      {
-        title: '著作权拥有量',
-        dataIndex: 'copyright_registration_count',
-        align: 'center',
-      },
-      // {
-      //   title: '状态',
+      { title: '单位性质', dataIndex: 'type', align: 'center' },
+      { title: '专利拥有量', dataIndex: 'invention_patent_owning_count', align: 'center' },
+      { title: '注册商标拥有量', dataIndex: 'registed_trademark_count', align: 'center' },
+      { title: '著作权拥有量', dataIndex: 'copyright_registration_count', align: 'center' }, //   title: '状态', // {
       //   dataIndex: 'status',
       //   filters: [
       //     {
@@ -455,32 +428,51 @@ export default class CompanyList extends PureComponent {
       //   sorter: true,
       //   render: val => <span>{moment(val).format('YYYY-MM-DD HH:mm:ss')}</span>,
       // },
-      // {
-      //   title: '操作',
-      //   render: () => (
-      //     <Fragment>
-      //       <a href="">配置</a>
-      //       <Divider type="vertical" />
-      //       <a href="">订阅警报</a>
-      //     </Fragment>
-      //   ),
-      // },
+      {
+        title: '操作',
+        fixed: 'right',
+        render: (val, record) => (
+          <Fragment>
+            <a href="javasript:void()" onClick={() => this.showPatentTrend(record)}>
+              专利趋势
+            </a>
+            <Divider type="vertical" />
+            <a href="javasript:void()" onClick={() => this.showTrademarkTrend(record)}>
+              商标趋势
+            </a>
+          </Fragment>
+        ),
+      },
     ];
+
+    const { showTrendModal } = this.state;
+
+    const _this = this;
+    const trendProps = {
+      list: yearPatentList,
+      type: trendType,
+      showAddModel: showTrendModal,
+      onOk: function(values) {
+        _this.setState({ showTrendModal: false });
+      },
+      handleAddModalVisible: function() {
+        _this.setState({ showTrendModal: !showTrendModal });
+      },
+    };
 
     return (
       <Card bordered={false}>
         <div className={styles.tableList}>
           <div className={styles.tableListForm}>{this.renderForm()}</div>
-          <StandardTable
-            selectedRows={selectedRows}
+          <StandardTable // selectedRows={selectedRows}
             loading={loading}
             data={data}
-            columns={columns}
-            onSelectRow={this.handleSelectRows}
+            columns={columns} // onSelectRow={this.handleSelectRows}
             onChange={this.handleStandardTableChange}
             scroll={{ x: 1500 }}
           />
         </div>
+        <PatentTrend {...trendProps} />
       </Card>
     );
   }

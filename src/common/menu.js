@@ -11,11 +11,6 @@ const menuData = [
     icon: 'dashboard',
     path: 'industry/list',
   },
-  {
-    name: '产业数据对比',
-    icon: 'dashboard',
-    path: 'industry/industry-compare',
-  },
 ];
 
 function formatter(data, parentPath = '/', parentAuthority) {

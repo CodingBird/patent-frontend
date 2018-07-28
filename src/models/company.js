@@ -1,4 +1,4 @@
-import { queryList, queryDetail } from '../services/company';
+import { queryList, queryDetail, queryYearPatent } from '../services/company';
 
 export default {
   namespace: 'company',
@@ -8,12 +8,11 @@ export default {
       list: [],
       pagination: {},
     },
+    yearPatentList: [],
   },
 
   effects: {
     *fetch({ payload }, { call, put }) {
-      console.log('fetch 1');
-      console.log(payload);
       const response = yield call(queryList, payload);
       console.log('fetch 2');
       yield put({
@@ -22,34 +21,28 @@ export default {
       });
     },
     *fetchDetail({ payload }, { call, put }) {
-      console.log('fetch 1');
-      console.log(payload);
       const response = yield call(queryDetail, payload);
-      console.log('fetch 2');
       yield put({
         type: 'save',
         payload: response.data,
       });
     },
-    *add({ payload, callback }, { call, put }) {
-      const response = yield call(addRule, payload);
+    *fetchYearPatent({ payload }, { call, put }) {
+      const response = yield call(queryYearPatent, payload);
       yield put({
-        type: 'save',
-        payload: response,
+        type: 'saveYearPatent',
+        payload: response.data,
       });
-      if (callback) callback();
-    },
-    *remove({ payload, callback }, { call, put }) {
-      const response = yield call(removeRule, payload);
-      yield put({
-        type: 'save',
-        payload: response,
-      });
-      if (callback) callback();
     },
   },
 
   reducers: {
+    saveYearPatent(state, action) {
+      return {
+        ...state,
+        yearPatentList: action.payload,
+      };
+    },
     save(state, action) {
       return {
         ...state,
