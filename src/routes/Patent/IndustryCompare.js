@@ -62,10 +62,6 @@ const metrics = [
   { id: 'patent_person_rate', name: '有效发明专利/从业人员数' },
 ];
 
-@connect(({ industry, loading }) => ({
-  industry,
-  loading: loading.effects['industry/fetch'],
-}))
 @Form.create()
 export default class IndustryCompare extends PureComponent {
   state = {
@@ -74,10 +70,7 @@ export default class IndustryCompare extends PureComponent {
     chosenMetrics: ['工业总产值', '出口交货值', '主营业务收入', '利润总额', '资产总计'],
   };
 
-  componentDidMount() {
-    const { dispatch } = this.props;
-    dispatch({ type: 'industry/fetch' });
-  }
+  componentDidMount() {}
 
   renderSimpleForm() {
     const { getFieldDecorator } = this.props.form;
@@ -102,9 +95,9 @@ export default class IndustryCompare extends PureComponent {
   }
 
   render() {
-    const { industry, loading } = this.props;
-    const { data } = industry;
-    const industryData = data.list.length > 0 ? [data.list[0], data.list[1]] : [];
+    const { showAddModel, form, onOk, handleAddModalVisible, selectedRows } = this.props;
+
+    const industryData = selectedRows || [];
     industryData.map(item => {
       for (let metric of metrics) {
         item[metric.name] = item[metric.id];
@@ -139,9 +132,15 @@ export default class IndustryCompare extends PureComponent {
     };
 
     return (
-      <PageHeaderLayout title="用户列表">
+      <Modal
+        title={'选择指标'}
+        visible={showAddModel}
+        onOk={onOk}
+        onCancel={() => handleAddModalVisible()}
+        width={1000}
+      >
         <div className={styles.tableListForm}>{this.renderSimpleForm()}</div>
-        <div style={{ width: 1000, background: '#FFFFFF', marginTop: 20 }}>
+        <div style={{ width: 900, background: '#FFFFFF', marginTop: 20 }}>
           <Chart height={400} data={dv} forceFit>
             <Axis name="月份" />
             <Axis name="月均降雨量" />
@@ -157,7 +156,7 @@ export default class IndustryCompare extends PureComponent {
         </div>
 
         <MetricChooseModal {...metricChooseModalProps} />
-      </PageHeaderLayout>
+      </Modal>
     );
   }
 }

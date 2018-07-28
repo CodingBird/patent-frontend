@@ -26,13 +26,13 @@ class StandardTable extends PureComponent {
 
   componentWillReceiveProps(nextProps) {
     // clean state
-    // if (nextProps.selectedRows.length === 0) {
-    //   const needTotalList = initTotalList(nextProps.columns);
-    //   this.setState({
-    //     selectedRowKeys: [],
-    //     needTotalList,
-    //   });
-    // }
+    if (nextProps.selectedRows.length === 0) {
+      const needTotalList = initTotalList(nextProps.columns);
+      this.setState({
+        selectedRowKeys: [],
+        needTotalList,
+      });
+    }
   }
 
   handleRowSelectChange = (selectedRowKeys, selectedRows) => {
@@ -75,17 +75,17 @@ class StandardTable extends PureComponent {
       ...pagination,
     };
 
-    // const rowSelection = {
-    //   selectedRowKeys,
-    //   onChange: this.handleRowSelectChange,
-    //   getCheckboxProps: record => ({
-    //     disabled: record.disabled,
-    //   }),
-    // };
+    const rowSelection = {
+      selectedRowKeys,
+      onChange: this.handleRowSelectChange,
+      getCheckboxProps: record => ({
+        disabled: record.disabled,
+      }),
+    };
 
     return (
       <div className={styles.standardTable}>
-        {/* <div className={styles.tableAlert}>
+        <div className={styles.tableAlert}>
           <Alert
             message={
               <Fragment>
@@ -106,11 +106,11 @@ class StandardTable extends PureComponent {
             type="info"
             showIcon
           />
-        </div> */}
+        </div>
         <Table
           loading={loading}
           rowKey={rowKey || 'key'}
-          // rowSelection={rowSelection}
+          rowSelection={rowSelection}
           dataSource={list}
           columns={columns}
           pagination={paginationProps}

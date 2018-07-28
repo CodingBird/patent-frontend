@@ -22,6 +22,7 @@ import StandardTable from '../../components/StandardTable';
 import PageHeaderLayout from '../../layouts/PageHeaderLayout';
 
 import styles from './IndustryList.less';
+import IndustryCompare from './IndustryCompare';
 
 const FormItem = Form.Item;
 const { Option } = Select;
@@ -37,6 +38,8 @@ const dateFormat = 'YYYY/MM/DD';
 export default class IndustryList extends PureComponent {
   state = {
     formValues: {},
+    selectedRows: [],
+    showCompareModal: false,
   };
 
   componentDidMount() {
@@ -81,6 +84,12 @@ export default class IndustryList extends PureComponent {
       });
 
       dispatch({ type: 'industry/fetch', payload: values });
+    });
+  };
+
+  handleSelectRows = rows => {
+    this.setState({
+      selectedRows: rows,
     });
   };
 
@@ -146,20 +155,49 @@ export default class IndustryList extends PureComponent {
     const { data } = industry;
     console.log('data....');
     console.log(data);
+    const { selectedRows, showCompareModal } = this.state;
+
+    const _this = this;
+    const compareProps = {
+      selectedRows: selectedRows,
+      showAddModel: showCompareModal,
+      onOk: function(values) {
+        _this.setState({ showCompareModal: false });
+      },
+      handleAddModalVisible: function() {
+        _this.setState({ showCompareModal: !showCompareModal });
+      },
+    };
     return (
       <PageHeaderLayout title="吴中区密集型产业数据">
         <Card bordered={false}>
           <div className={styles.tableList}>
             <div className={styles.tableListForm}>{this.renderForm()}</div>
+            <div className={styles.tableListOperator}>
+              {selectedRows.length > 1 && (
+                <span>
+                  <Button
+                    onClick={() => {
+                      this.setState({ showCompareModal: true });
+                    }}
+                  >
+                    产业对比
+                  </Button>
+                </span>
+              )}
+            </div>
             <StandardTable
+              selectedRows={selectedRows}
               rowKey={'id'}
               loading={loading}
               data={data}
               columns={columns}
+              onSelectRow={this.handleSelectRows}
               onChange={this.handleStandardTableChange}
             />
           </div>
         </Card>
+        <IndustryCompare {...compareProps} />
       </PageHeaderLayout>
     );
   }

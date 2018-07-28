@@ -38,7 +38,7 @@ class MetricChooseModal extends PureComponent {
               <Row>
                 {metrics.map(metric => {
                   return (
-                    <Col span={8}>
+                    <Col span={8} key={'col' + metric.id}>
                       <Checkbox value={metric.name} key={metric.id}>
                         {metric.name}
                       </Checkbox>
