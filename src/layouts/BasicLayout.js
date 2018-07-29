@@ -108,11 +108,11 @@ class BasicLayout extends React.PureComponent {
     } else {
       const token = localStorage.getItem('token');
       if (!token) {
-        return '/user/login';
+        return '/patent/list';
       }
-      return '/dashboard/real-time-data';
+      return '/patent/list';
     }
-    return redirect;
+    return '/patent/list';
   };
   handleMenuCollapse = collapsed => {
     this.props.dispatch({

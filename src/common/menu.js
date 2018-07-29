@@ -7,7 +7,7 @@ const menuData = [
     path: 'patent/list',
   },
   {
-    name: '产业数据',
+    name: '行业数据',
     icon: 'dashboard',
     path: 'industry/list',
   },

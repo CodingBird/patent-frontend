@@ -61,6 +61,12 @@ export function post(url, params) {
   });
 }
 
+export function exportData(url, params) {
+  url = convertTestEnvUrlIfNecessary(url);
+  url = `${url}?${stringify(params)}`;
+  window.open(url);
+}
+
 /**
  * Requests a URL, returning a promise.
  *

@@ -25,6 +25,6 @@ export default {
     template: './src/index.ejs',
   },
   disableDynamicImport: true,
-  publicPath: '/',
+  publicPath: '/public',
   hash: true,
 };

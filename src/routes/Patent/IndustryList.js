@@ -20,6 +20,7 @@ import {
 } from 'antd';
 import StandardTable from '../../components/StandardTable';
 import PageHeaderLayout from '../../layouts/PageHeaderLayout';
+import * as industryService from '../../services/industry';
 
 import styles from './IndustryList.less';
 import IndustryCompare from './IndustryCompare';
@@ -93,6 +94,10 @@ export default class IndustryList extends PureComponent {
     });
   };
 
+  export = () => {
+    industryService.exportCsv();
+  };
+
   renderSimpleForm() {
     const { getFieldDecorator } = this.props.form;
     return (
@@ -107,6 +112,13 @@ export default class IndustryList extends PureComponent {
             <span className={styles.submitButtons}>
               <Button type="primary" htmlType="submit">
                 查询
+              </Button>
+            </span>
+          </Col>
+          <Col md={8} sm={24}>
+            <span className={styles.submitButtons}>
+              <Button type="primary" onClick={this.export}>
+                导出
               </Button>
             </span>
           </Col>

@@ -229,9 +229,49 @@ export default class CompanyList extends PureComponent {
             </span>
           </Col>
         </Row>
+        <div style={{ marginBottom: 20 }}>
+          <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
+            <Col md={16} sm={24}>
+              导出：<Button type="primary" onClick={this.exportBaseInfo}>
+                公司基本信息
+              </Button>
+              <span> </span>
+              <Button type="primary" onClick={this.exportProducts}>
+                公司产品信息
+              </Button>{' '}
+              <span> </span>
+              <Button type="primary" onClick={this.exportYearBus}>
+                历年经营数据
+              </Button>
+              <span> </span>
+              <Button type="primary" onClick={this.exportYearPatent}>
+                历年专利数据
+              </Button>
+            </Col>
+            {/* <Col md={8} sm={24}>
+              <Button type="primary">导出</Button>
+            </Col> */}
+          </Row>
+        </div>
       </Form>
     );
   }
+
+  exportBaseInfo = () => {
+    companyService.exportBasicInfo();
+  };
+
+  exportProducts = () => {
+    companyService.exportProducts();
+  };
+
+  exportYearBus = () => {
+    companyService.exportYearBus();
+  };
+
+  exportYearPatent = () => {
+    companyService.exportYearPatent();
+  };
 
   renderAdvancedForm() {
     const { getFieldDecorator } = this.props.form;
@@ -264,6 +304,30 @@ export default class CompanyList extends PureComponent {
             </span>
           </Col>
         </Row>
+        <div style={{ marginBottom: 20 }}>
+          <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
+            <Col md={16} sm={24}>
+              导出：<Button type="primary" onClick={this.exportBaseInfo}>
+                公司基本信息
+              </Button>
+              <span> </span>
+              <Button type="primary" onClick={this.exportProducts}>
+                公司产品信息
+              </Button>{' '}
+              <span> </span>
+              <Button type="primary" onClick={this.exportYearBus}>
+                历年经营数据
+              </Button>
+              <span> </span>
+              <Button type="primary" onClick={this.exportYearPatent}>
+                历年专利数据
+              </Button>
+            </Col>
+            {/* <Col md={8} sm={24}>
+              <Button type="primary">导出</Button>
+            </Col> */}
+          </Row>
+        </div>
         <Row type="flex">
           <Col span={7}>
             <FormItem label="著作权登记(件)">
@@ -290,7 +354,9 @@ export default class CompanyList extends PureComponent {
         {searchArr.map((item, idx) => (
           <Row type="flex" key={idx}>
             <Col span={2}>
-              {getFieldDecorator('bool_' + idx, { initialValue: 'and' })(
+              {getFieldDecorator('bool_' + idx, {
+                initialValue: 'and',
+              })(
                 <Select style={{ width: '100%' }}>
                   <Option value="and">并且</Option>
                   <Option value="or">或者</Option>
@@ -461,19 +527,25 @@ export default class CompanyList extends PureComponent {
     };
 
     return (
-      <Card bordered={false}>
-        <div className={styles.tableList}>
-          <div className={styles.tableListForm}>{this.renderForm()}</div>
-          <StandardTable // selectedRows={selectedRows}
-            loading={loading}
-            data={data}
-            columns={columns} // onSelectRow={this.handleSelectRows}
-            onChange={this.handleStandardTableChange}
-            scroll={{ x: 1500 }}
-          />
-        </div>
-        <PatentTrend {...trendProps} />
-      </Card>
+      <PageHeaderLayout title="吴中区知识产权密集型企业数据库">
+        <Card bordered={false}>
+          <div className={styles.tableList}>
+            <div className={styles.tableListForm}>{this.renderForm()}</div>
+            <StandardTable
+              loading={
+                loading // selectedRows={selectedRows}
+              }
+              data={data}
+              columns={columns}
+              onChange={
+                this.handleStandardTableChange // onSelectRow={this.handleSelectRows}
+              }
+              scroll={{ x: 1500 }}
+            />
+          </div>
+          <PatentTrend {...trendProps} />
+        </Card>
+      </PageHeaderLayout>
     );
   }
 }
